@@ -8,8 +8,8 @@ class BaselineAnt(Ant):
     def act(self):
         pheremones = self.senseOwnPheromone()
         food = self.senseFood()
-        pref_direc = 2
-        pref_pher = 3
+        pref_direc = 4
+        pref_pher = 6
 
         # am eigenenen Nest
         if self.atOwnNest():
