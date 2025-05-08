@@ -21,14 +21,14 @@ class BaselineAnt(Ant):
         elif not self.hasFood: 
             weights = [0, 1, 1, 1, 1]
             # Wenn essen gefunden, direkt hin laufen
-            if not all(x == 0 for x in self.senseFood()) and ((self.x > 6 or self.y > 6) if self.team == 0 else (self.x < 27 or self.y < 27)):
+            if not all(x == 0 for x in self.senseFood()) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)):
                 self.direction = self.directions[[i for i, x in enumerate(food) if x > 0][0]]
             else:
                 # Richtung rechts unten bevorzugen (abhänging von Team)
-                if ((self.x < 23 and self.y < 23) if self.team == 0 else (self.x > 10 and self.y > 10)): 
+                if ((self.x < 22 and self.y < 22) if self.team == 0 else (self.x > 9 and self.y > 9)): 
                     weights = [w + d for w,d in zip(weights, [0,0,1*pref_direc,0,1*pref_direc] if self.team == 0 else [0,1*pref_direc,0,1*pref_direc,0])]
                 # Pfade mit Pheromonen bevorzugen
-                if not all(x == 0 for x in pheremones) and ((self.x > 6 or self.y > 6) if self.team == 0 else (self.x < 27 or self.y < 27)): 
+                if not all(x == 0 for x in pheremones) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)): 
                     weights = [w + int(p*pref_pher) for w,p in zip(weights, pheremones)]
                 self.direction = random.choices(self.directions, weights, k=1)[0]
             self.move()
@@ -37,13 +37,13 @@ class BaselineAnt(Ant):
         elif self.hasFood:
             weights = [0, 1, 1, 1, 1]
             # Richtung links oben bevorzugen (abhänging von Team)
-            if ((self.x > 12 or self.y > 8) if self.team == 0 else (self.x < 21 or self.y < 25)): 
+            if ((self.x > 11 or self.y > 5) if self.team == 0 else (self.x < 20 or self.y < 25)): 
                 weights = [w + d for w,d in zip(weights, [0,1*pref_direc,0,1*pref_direc,0] if self.team == 0 else [0,0,1*pref_direc,0,1*pref_direc])]
             # Sicher stellen, dass sie net in der Ecke stecken bleiben
-            elif (8 <= self.x <= 12 and self.y <= 8):
+            elif ((5 <= self.x <= 11 and self.y <= 5) if self.team == 0 else (25 >= self.x >= 20 and self.y >= 25)):
                 weights = [w + d for w,d in zip(weights, [0,1*pref_direc,0,0,1*pref_direc] if self.team == 0 else [0,0,1*pref_direc,1*pref_direc,0])]
             # Pfade mit Pheromonen bevorzugen
-            if not all(x == 0 for x in pheremones) and ((self.x > 6 or self.y > 6) if self.team == 0 else (self.x < 27 or self.y < 27)): 
+            if not all(x == 0 for x in pheremones) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)): 
                 weights = [w + int(p*pref_pher) for w,p in zip(weights, pheremones)]
             self.direction = random.choices(self.directions, weights, k=1)[0]
             self.dropPheromone()
