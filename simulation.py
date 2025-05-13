@@ -1,7 +1,7 @@
 import pickle
 
 class Simulation:
-    def __init__(self, antA, antB, pref_A, pref_B, logfile=None):
+    def __init__(self, antA, antB, pref_A, logfile=None):
         self.gridWidth = 32
         self.gridHeight = 32
 
@@ -16,7 +16,6 @@ class Simulation:
         self.teamB = 1
 
         self.pref_strght_A = pref_A
-        self.pref_strght_B = pref_B
 
          # Create the grids
         self.foodGrid = [[0 for _ in range(self.gridWidth)] for _ in range(self.gridHeight)]
@@ -47,7 +46,7 @@ class Simulation:
                 elif c == 'a':
                     self.ants.append(self.antA(x, y, self.teamA, self, self.pref_strght_A))
                 elif c == 'b':
-                    self.ants.append(self.antB(x, y, self.teamB, self, self.pref_strght_B))
+                    self.ants.append(self.antB(x, y, self.teamB, self))
                 elif c == '#':
                     self.obstacleGrid[x][y] = 1
                 elif c.isdigit():

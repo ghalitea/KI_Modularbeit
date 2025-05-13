@@ -9,14 +9,13 @@ from base import BaselineAnt
 
 if __name__ == "__main__":
     win_matrix = [0 for _ in range(40)]  
-    filename = "sim_strght_pref.txt"
+    filename = "sim_strght_pref_rand.txt"
 
     while True:
         for i in range(30):
             pref_strght_A = random.randint(1,40)
-            pref_strght_B = random.randint(1,40)
 
-            simulation = Simulation(BaselineAnt, BaselineAnt,pref_strght_A, pref_strght_B, logfile="project02.rec")   
+            simulation = Simulation(BaselineAnt, RandomAnt,pref_strght_A, logfile="project02.rec")   
         
             simulation.loadArena("arena01.txt")
 
@@ -26,9 +25,7 @@ if __name__ == "__main__":
 
             if simulation.foodCount[0] > simulation.foodCount[1]:
                 win_matrix[pref_strght_A-1] += abs(simulation.foodCount[0] - simulation.foodCount[1])
-                win_matrix[pref_strght_B-1] -= abs(simulation.foodCount[0] - simulation.foodCount[1])
             elif simulation.foodCount[1] > simulation.foodCount[0]:
-                win_matrix[pref_strght_B-1] += abs(simulation.foodCount[0] - simulation.foodCount[1])
                 win_matrix[pref_strght_A-1] -= abs(simulation.foodCount[0] - simulation.foodCount[1])
             else:
                 pass

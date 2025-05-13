@@ -43,12 +43,38 @@ def ascii_histogram(probs, width=50):
         bar = '█' * int(p / max_prob * width)
         print(f"{idx:2d}: {p:.6f} | {bar}")
 
+def gleitender_mittelwert(daten, window_size=3):
+    """
+    Glättet eine Liste von Zahlen mit dem gleitenden Mittelwert.
+    
+    :param daten: Liste von Zahlen (z.B. [1, 2, 3, 4, 5])
+    :param window_size: Fenstergröße für den gleitenden Mittelwert (Standard: 3)
+    :return: Liste der geglätteten Werte
+    """
+    if window_size < 1:
+        raise ValueError("window_size muss mindestens 1 sein.")
+    if window_size > len(daten):
+        raise ValueError("window_size darf nicht größer als die Datenlänge sein.")
+    
+    geglaettete_daten = []
+    for i in range(len(daten)):
+        start = max(0, i - window_size // 2)
+        end = min(len(daten), i + window_size // 2 + 1)
+        fenster = daten[start:end]
+        mittelwert = sum(fenster) / len(fenster)
+        geglaettete_daten.append(mittelwert)
+    return geglaettete_daten
+ 
 def main():
-    filename = 'sim_strght_pref.txt'  # Passe den Dateinamen ggf. an
+    filename = 'sim_strght_pref_rand.txt'  # Passe den Dateinamen ggf. an
     data = load_data(filename)
     shifted = normalize_data(data)
     probs = probabilities(shifted)
     mean, var, std, mode, median, q1, q3 = statistics(probs)
+    evened_data = gleitender_mittelwert(shifted)
+    evened_data = gleitender_mittelwert(evened_data)
+    evened_data = gleitender_mittelwert(evened_data)
+    even_probs = probabilities(evened_data)
 
     print("Statistische Kennzahlen:")
     print(f"Erwartungswert:       {mean:.2f}")
@@ -61,6 +87,9 @@ def main():
 
     print("ASCII-Histogramm der Wahrscheinlichkeiten:")
     ascii_histogram(probs, width=50)
+
+    print("ASCII-Histogramm der Wahrscheinlichkeiten (evened out):")
+    ascii_histogram(even_probs, width=50)
 
 if __name__ == '__main__':
     main()
