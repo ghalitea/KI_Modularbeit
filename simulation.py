@@ -1,7 +1,7 @@
 import pickle
 
 class Simulation:
-    def __init__(self, antA, antB, pref_A, logfile=None):
+    def __init__(self, antA, antB, pref_strght=(24,24), pref_direc=(4,4), pref_pher=(6,6), logfile=None):
         self.gridWidth = 32
         self.gridHeight = 32
 
@@ -15,9 +15,11 @@ class Simulation:
         self.teamA = 0
         self.teamB = 1
 
-        self.pref_strght_A = pref_A
+        self.pref_strght = pref_strght
+        self.pref_direc = pref_direc
+        self.pref_pher = pref_pher
 
-         # Create the grids
+        # Create the grids
         self.foodGrid = [[0 for _ in range(self.gridWidth)] for _ in range(self.gridHeight)]
         self.obstacleGrid = [[0 for _ in range(self.gridWidth)] for _ in range(self.gridHeight)]
         self.nestGrid = [[[0 for _ in range(self.gridWidth)] for _ in range(self.gridHeight)], [[0 for _ in range(self.gridWidth)] for _ in range(self.gridHeight)]]
@@ -44,9 +46,15 @@ class Simulation:
                 elif c == 'B':
                     self.nestGrid[self.teamB][x][y] = 1
                 elif c == 'a':
-                    self.ants.append(self.antA(x, y, self.teamA, self, self.pref_strght_A))
+                    self.ants.append(self.antA(x, y, self.teamA, self))
+                    if hasattr(self.antA, 'set_pref_strght'):self.ants[-1].set_pref_strght(self.pref_strght[0])
+                    if hasattr(self.antA, 'set_pref_direc'):self.ants[-1].set_pref_direc(self.pref_direc[0])
+                    if hasattr(self.antA, 'set_pref_pher'):self.ants[-1].set_pref_pher(self.pref_pher[0])
                 elif c == 'b':
                     self.ants.append(self.antB(x, y, self.teamB, self))
+                    if hasattr(self.antB, 'set_pref_strght'):self.ants[-1].set_pref_strght(self.pref_strght[1])
+                    if hasattr(self.antB, 'set_pref_direc'):self.ants[-1].set_pref_direc(self.pref_direc[1])
+                    if hasattr(self.antB, 'set_pref_pher'):self.ants[-1].set_pref_pher(self.pref_pher[1])
                 elif c == '#':
                     self.obstacleGrid[x][y] = 1
                 elif c.isdigit():

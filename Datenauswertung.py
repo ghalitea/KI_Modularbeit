@@ -72,7 +72,7 @@ def gleitender_mittelwert(daten, window_size=3):
     return geglaettete_daten
  
 def main():
-    filename = 'sim_strght_pref_rand.txt'  # Passe den Dateinamen ggf. an
+    filename = 'sim_strght_pref.txt'  # Passe den Dateinamen ggf. an
     data = load_data(filename)
     shifted = normalize_data(data)
     probs = probabilities(shifted)
