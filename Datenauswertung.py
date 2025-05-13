@@ -2,12 +2,15 @@ import numpy as np
 
 def load_data(filename):
     with open(filename, 'r') as f:
-        content = f.read()
-    # Unterstützt Komma- oder Zeilen-Trennung
-    if ',' in content:
-        data = np.array([float(x) for x in content.replace('\n', '').split(',') if x.strip()])
+        lines = f.readlines()
+    if len(lines) < 3:
+        raise ValueError("File does not contain at least three lines.")
+    third_line = lines[2].strip()
+    # Supports comma- or whitespace-separated values
+    if ',' in third_line:
+        data = np.array([float(x) for x in third_line.split(',') if x.strip()])
     else:
-        data = np.array([float(x) for x in content.split() if x.strip()])
+        data = np.array([float(x) for x in third_line.split() if x.strip()])
     return data
 
 def normalize_data(data):
@@ -45,11 +48,11 @@ def ascii_histogram(probs, width=50):
 
 def gleitender_mittelwert(daten, window_size=3):
     """
-    Glättet eine Liste von Zahlen mit dem gleitenden Mittelwert.
+    Glättet eine Liste von Zahlen mit dem gleitenden Mittelwert, ignoriert aber Nullen.
     
-    :param daten: Liste von Zahlen (z.B. [1, 2, 3, 4, 5])
+    :param daten: Liste von Zahlen (z.B. [1, 0, 3, 4, 0])
     :param window_size: Fenstergröße für den gleitenden Mittelwert (Standard: 3)
-    :return: Liste der geglätteten Werte
+    :return: Liste der geglätteten Werte (Nullen werden ignoriert)
     """
     if window_size < 1:
         raise ValueError("window_size muss mindestens 1 sein.")
@@ -60,8 +63,11 @@ def gleitender_mittelwert(daten, window_size=3):
     for i in range(len(daten)):
         start = max(0, i - window_size // 2)
         end = min(len(daten), i + window_size // 2 + 1)
-        fenster = daten[start:end]
-        mittelwert = sum(fenster) / len(fenster)
+        fenster = [x for x in daten[start:end] if x != 0]
+        if fenster:
+            mittelwert = sum(fenster) / len(fenster)
+        else:
+            mittelwert = 0  # oder None, falls du das bevorzugst
         geglaettete_daten.append(mittelwert)
     return geglaettete_daten
  
@@ -72,8 +78,6 @@ def main():
     probs = probabilities(shifted)
     mean, var, std, mode, median, q1, q3 = statistics(probs)
     evened_data = gleitender_mittelwert(shifted)
-    evened_data = gleitender_mittelwert(evened_data)
-    evened_data = gleitender_mittelwert(evened_data)
     even_probs = probabilities(evened_data)
 
     print("Statistische Kennzahlen:")

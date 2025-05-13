@@ -8,12 +8,14 @@ from rant import RandomAnt
 from base import BaselineAnt
 
 if __name__ == "__main__":
-    win_matrix = [0 for _ in range(40)]  
+    won_points = [0 for _ in range(40)]  
+    times_played = [0 for _ in range(40)]  
     filename = "sim_strght_pref_rand.txt"
 
     while True:
         for i in range(30):
             pref_strght_A = random.randint(1,40)
+            times_played[pref_strght_A-1] +=1
 
             simulation = Simulation(BaselineAnt, RandomAnt,pref_strght_A, logfile="project02.rec")   
         
@@ -24,33 +26,43 @@ if __name__ == "__main__":
             print(simulation.foodCount)
 
             if simulation.foodCount[0] > simulation.foodCount[1]:
-                win_matrix[pref_strght_A-1] += abs(simulation.foodCount[0] - simulation.foodCount[1])
+                won_points[pref_strght_A-1] += abs(simulation.foodCount[0] - simulation.foodCount[1])
             elif simulation.foodCount[1] > simulation.foodCount[0]:
-                win_matrix[pref_strght_A-1] -= abs(simulation.foodCount[0] - simulation.foodCount[1])
+                won_points[pref_strght_A-1] -= abs(simulation.foodCount[0] - simulation.foodCount[1])
             else:
                 pass
 
             simulation.shutdown()
             print(i)
 
-        # Step 1: Check if file exists and read existing list
+
+        N = 40  # List length
+
+        # Step 1: Read existing lists (initialize if missing)
         if os.path.exists(filename):
             with open(filename, "r") as f:
-                line = f.readline().strip()
-                if line:
-                    existing_list = [int(x) for x in line.split(',')]
-                else:
-                    existing_list = [0] * 40
+                lines = [line.strip() for line in f.readlines()]
+                existing_won_points = [int(x) for x in lines[0].split(',')] if len(lines) > 0 and lines[0] else [0] * N
+                existing_times_played = [int(x) for x in lines[1].split(',')] if len(lines) > 1 and lines[1] else [0] * N
         else:
-            existing_list = [0] * 40
+            existing_won_points = [0] * N
+            existing_times_played = [0] * N
 
-        # Step 2: Add new_list to existing_list element-wise
-        updated_list = [a + b for a, b in zip(existing_list, win_matrix)]
+        # Step 2: Update the first two lists (cumulative sum)
+        updated_won_points = [a + b for a, b in zip(existing_won_points, won_points)]
+        updated_times_played = [a + b for a, b in zip(existing_times_played, times_played)]
 
-        # Step 3: Write the updated list back to the file
+        # Step 3: Calculate the third list (ratios, handle division by zero)
+        ratios = [
+            (wp / tp if tp != 0 else 0)
+            for wp, tp in zip(updated_won_points, updated_times_played)
+        ]
+
+        # Step 4: Write all three lists back to the file
         with open(filename, "w") as f:
-            f.write(','.join(str(x) for x in updated_list))
+            f.write(','.join(str(x) for x in updated_won_points) + '\n')
+            f.write(','.join(str(x) for x in updated_times_played) + '\n')
+            f.write(','.join(f"{x:.4f}" for x in ratios) + '\n')  # 4 decimal places
 
-        print("Updated list saved to", filename)
+        print("Updated lists saved to", filename)
 
-        # print(win_matrix)
