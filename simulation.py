@@ -14,10 +14,9 @@ class Simulation:
         self.antB = antB
         self.teamA = 0
         self.teamB = 1
-        self.pref_direc_A = pref_A[0]
-        self.pref_pher_A = pref_A[1]
-        self.pref_direc_B = pref_B[0]
-        self.pref_pher_B = pref_B[1]
+
+        self.pref_strght_A = pref_A
+        self.pref_strght_B = pref_B
 
          # Create the grids
         self.foodGrid = [[0 for _ in range(self.gridWidth)] for _ in range(self.gridHeight)]
@@ -46,9 +45,9 @@ class Simulation:
                 elif c == 'B':
                     self.nestGrid[self.teamB][x][y] = 1
                 elif c == 'a':
-                    self.ants.append(self.antA(x, y, self.teamA, self, self.pref_direc_A, self.pref_pher_A))
+                    self.ants.append(self.antA(x, y, self.teamA, self, self.pref_strght_A))
                 elif c == 'b':
-                    self.ants.append(self.antB(x, y, self.teamB, self, self.pref_direc_B, self.pref_pher_B))
+                    self.ants.append(self.antB(x, y, self.teamB, self, self.pref_strght_B))
                 elif c == '#':
                     self.obstacleGrid[x][y] = 1
                 elif c.isdigit():
