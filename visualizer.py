@@ -132,5 +132,5 @@ class Visualizer:
         pygame.quit()
 
 if __name__ == "__main__":
-    visualizer = Visualizer("project02.rec", 10000, drawPheromones=0, speed=200, stopAt=-1)
+    visualizer = Visualizer("project02.rec", 10000, drawPheromones=0, speed=20, stopAt=-1)
     visualizer.run()

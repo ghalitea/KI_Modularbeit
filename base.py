@@ -25,12 +25,19 @@ class BaselineAnt(Ant):
                 self.direction = self.directions[[i for i, x in enumerate(food) if x > 0][0]]
             else:
                 # Richtung rechts unten bevorzugen (abhänging von Team)
-                if ((self.x < 22 and self.y < 22) if self.team == 0 else (self.x > 9 and self.y > 9)): 
-                    weights = [w + d for w,d in zip(weights, [0,0,1*self.pref_direc,0,1*self.pref_direc] if self.team == 0 else [0,1*self.pref_direc,0,1*self.pref_direc,0])]
+                if ((self.x < 9 or self.y < 9) if self.team == 0 else (self.x > 22 or self.y > 22)): 
+                    weights = [w + d for w,d in zip(weights, [0,0,1*pref_direc,0,1*pref_direc] if self.team == 0 else [0,1*pref_direc,0,1*pref_direc,0])]
                 # Pfade mit Pheromonen bevorzugen
                 if not all(x == 0 for x in pheremones) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)): 
-                    weights = [w + int(p*self.pref_pher) for w,p in zip(weights, pheremones)]
-                self.direction = random.choices(self.directions, weights, k=1)[0]
+                    weights = [w + int(p*pref_pher*2) for w,p in zip(weights, pheremones)]
+                # Gerade aus bevorzugen
+                weights[self.directions.index(self.direction)] *= 30
+                # Nicht die ganze Zeit gegen die äußere Wand rennen
+                if (self.x == 1 and self.direction == (-1,0)) or (self.x == 30 and self.direction == (1,0)) or (self.y == 1 and self.direction == (0,-1)) or (self.y == 30 and self.direction == (0,1)):
+                    self.direction = (self.direction[0]*(-1), self.direction[1]*(-1))
+                else:
+                    self.direction = random.choices(self.directions, weights, k=1)[0]
+                
             self.move()
 
         # Handlungen wenn Futter dabei
