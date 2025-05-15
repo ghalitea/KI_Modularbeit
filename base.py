@@ -31,7 +31,7 @@ class BaselineAnt(Ant):
                 if not all(x == 0 for x in pheremones) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)): 
                     weights = [w + int(p*pref_pher*2) for w,p in zip(weights, pheremones)]
                 # Gerade aus bevorzugen
-                weights[self.directions.index(self.direction)] *= 30
+                weights[self.directions.index(self.direction)] *= 24
                 # Nicht die ganze Zeit gegen die äußere Wand rennen
                 if (self.x == 1 and self.direction == (-1,0)) or (self.x == 30 and self.direction == (1,0)) or (self.y == 1 and self.direction == (0,-1)) or (self.y == 30 and self.direction == (0,1)):
                     self.direction = (self.direction[0]*(-1), self.direction[1]*(-1))
