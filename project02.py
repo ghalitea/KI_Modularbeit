@@ -4,9 +4,10 @@ from simulation import Simulation
 
 from rant import RandomAnt
 from base import BaselineAnt
+from enemant import EnemyAnt
 
 if __name__ == "__main__":
-    simulation = Simulation(BaselineAnt, RandomAnt, logfile="project02.rec")   
+    simulation = Simulation(BaselineAnt, EnemyAnt, logfile="project02.rec")   
   
     simulation.loadArena("arena01.txt")
 
