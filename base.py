@@ -23,6 +23,8 @@ class BaselineAnt(Ant):
             # Wenn essen gefunden, direkt hin laufen
             if not all(x == 0 for x in self.senseFood()) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)):
                 self.direction = self.directions[[i for i, x in enumerate(food) if x > 0][0]]
+                self.move()
+                self.takeFood()
             else:
                 # Richtung rechts unten bevorzugen (abhänging von Team)
                 if ((self.x < 9 or self.y < 9) if self.team == 0 else (self.x > 22 or self.y > 22)): 
@@ -32,13 +34,10 @@ class BaselineAnt(Ant):
                     weights = [w + int(p*pref_pher*2) for w,p in zip(weights, pheremones)]
                 # Gerade aus bevorzugen
                 weights[self.directions.index(self.direction)] *= 24
-                # Nicht die ganze Zeit gegen die äußere Wand rennen
-                if (self.x == 1 and self.direction == (-1,0)) or (self.x == 30 and self.direction == (1,0)) or (self.y == 1 and self.direction == (0,-1)) or (self.y == 30 and self.direction == (0,1)):
-                    self.direction = (self.direction[0]*(-1), self.direction[1]*(-1))
-                else:
+                # Gehen, solange bis man nicht mehr gegen eine Wand rennt
+                while self.energy >= 1:
                     self.direction = random.choices(self.directions, weights, k=1)[0]
-                
-            self.move()
+                    self.move()
 
         # Handlungen wenn Futter dabei
         elif self.hasFood:
@@ -52,8 +51,11 @@ class BaselineAnt(Ant):
             # Pfade mit Pheromonen bevorzugen
             if not all(x == 0 for x in pheremones) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)): 
                 weights = [w + int(p*pref_pher) for w,p in zip(weights, pheremones)]
-            self.direction = random.choices(self.directions, weights, k=1)[0]
+            # Gehen, solange bis man nicht mehr gegen eine Wand rennt
+            while self.energy >= 1:
+                self.direction = random.choices(self.directions, weights, k=1)[0]
+                self.move()
             self.dropPheromone()
-            self.move()
-        self.takeFood()
+            
+        
         
