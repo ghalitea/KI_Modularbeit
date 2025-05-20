@@ -32,12 +32,14 @@ class BaselineAnt(Ant):
                 # Pfade mit Pheromonen bevorzugen
                 if not all(x == 0 for x in pheremones) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)): 
                     weights = [w + int(p*pref_pher*2) for w,p in zip(weights, pheremones)]
+                    weights[0] = 0
                 # Gerade aus bevorzugen
                 weights[self.directions.index(self.direction)] *= 24
                 # Gehen, solange bis man nicht mehr gegen eine Wand rennt
                 while self.energy >= 1:
                     self.direction = random.choices(self.directions, weights, k=1)[0]
                     self.move()
+                    weights[self.directions.index(self.direction)] = 0
 
         # Handlungen wenn Futter dabei
         elif self.hasFood:
@@ -50,11 +52,16 @@ class BaselineAnt(Ant):
                 weights = [w + d for w,d in zip(weights, [0,1*pref_direc,0,0,1*pref_direc] if self.team == 0 else [0,0,1*pref_direc,1*pref_direc,0])]
             # Pfade mit Pheromonen bevorzugen
             if not all(x == 0 for x in pheremones) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)): 
-                weights = [w + int(p*pref_pher) for w,p in zip(weights, pheremones)]
+                weights = [w + int(p*pref_pher) for w,p in zip(weights, pheremones)]  
+                weights[0] = 0        
+            # Gerade aus bevorzugen
+            weights[self.directions.index(self.direction)] *= 5
+
             # Gehen, solange bis man nicht mehr gegen eine Wand rennt
             while self.energy >= 1:
                 self.direction = random.choices(self.directions, weights, k=1)[0]
                 self.move()
+                weights[self.directions.index(self.direction)] = 0
             self.dropPheromone()
             
         
