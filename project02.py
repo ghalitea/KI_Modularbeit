@@ -6,6 +6,7 @@ from simulation import Simulation
 
 from rant import RandomAnt
 from base import BaselineAnt
+from enemant import EnemyAnt
 
 if __name__ == "__main__":
     won_points = [0 for _ in range(40)]  
