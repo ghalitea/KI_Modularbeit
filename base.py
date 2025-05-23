@@ -8,8 +8,8 @@ class BaselineAnt(Ant):
     def act(self):
         pheremones = self.senseOwnPheromone()
         food = self.senseFood()
-        pref_direc = 4
-        pref_pher = 6
+        pref_direc = 20
+        pref_pher = 15
 
         # am eigenenen Nest
         if self.atOwnNest():
@@ -55,7 +55,7 @@ class BaselineAnt(Ant):
                 weights = [w + int(p*pref_pher) for w,p in zip(weights, pheremones)]  
                 weights[0] = 0        
             # Gerade aus bevorzugen
-            weights[self.directions.index(self.direction)] *= 5
+            weights[self.directions.index(self.direction)] *= 11
 
             # Gehen, solange bis man nicht mehr gegen eine Wand rennt
             while self.energy >= 1:
