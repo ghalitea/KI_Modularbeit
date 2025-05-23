@@ -1,7 +1,7 @@
 import pickle
 
 class Simulation:
-    def __init__(self, antA, antB, pref_strght=(24,24), pref_direc=(4,4), pref_pher=(6,6), logfile=None):
+    def __init__(self, antA, antB, pref_strght_wtF=(24,24), pref_strght_wF=(11,11), pref_direc=(20,20), pref_pher=(15,15), logfile=None):
         self.gridWidth = 32
         self.gridHeight = 32
 
@@ -15,7 +15,8 @@ class Simulation:
         self.teamA = 0
         self.teamB = 1
 
-        self.pref_strght = pref_strght
+        self.pref_strght_wtF = pref_strght_wtF
+        self.pref_strght_wF = pref_strght_wF
         self.pref_direc = pref_direc
         self.pref_pher = pref_pher
 
@@ -47,12 +48,14 @@ class Simulation:
                     self.nestGrid[self.teamB][x][y] = 1
                 elif c == 'a':
                     self.ants.append(self.antA(x, y, self.teamA, self))
-                    if hasattr(self.antA, 'set_pref_strght'):self.ants[-1].set_pref_strght(self.pref_strght[0])
+                    if hasattr(self.antA, 'set_pref_strght_wtF'):self.ants[-1].set_pref_strght_wtF(self.pref_strght_wtF[0])
+                    if hasattr(self.antA, 'set_pref_strght_wF'):self.ants[-1].set_pref_strght_wF(self.pref_strght_wF[0])
                     if hasattr(self.antA, 'set_pref_direc'):self.ants[-1].set_pref_direc(self.pref_direc[0])
                     if hasattr(self.antA, 'set_pref_pher'):self.ants[-1].set_pref_pher(self.pref_pher[0])
                 elif c == 'b':
                     self.ants.append(self.antB(x, y, self.teamB, self))
-                    if hasattr(self.antB, 'set_pref_strght'):self.ants[-1].set_pref_strght(self.pref_strght[1])
+                    if hasattr(self.antB, 'set_pref_strght_wtF'):self.ants[-1].set_pref_strght_wtF(self.pref_strght_wtF[1])
+                    if hasattr(self.antB, 'set_pref_strght_wF'):self.ants[-1].set_pref_strght_wF(self.pref_strght_wF[1])
                     if hasattr(self.antB, 'set_pref_direc'):self.ants[-1].set_pref_direc(self.pref_direc[1])
                     if hasattr(self.antB, 'set_pref_pher'):self.ants[-1].set_pref_pher(self.pref_pher[1])
                 elif c == '#':

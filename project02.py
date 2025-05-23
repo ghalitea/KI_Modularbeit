@@ -9,18 +9,23 @@ from base import BaselineAnt
 from enemant import EnemyAnt
 
 if __name__ == "__main__":
-    won_points = [0 for _ in range(40)]  
-    times_played = [0 for _ in range(40)]  
-    filename = "sim_strght_pref.txt"
+    N = 60  # List length
+
+    won_points = []  
+    times_played = []  
+    filename = "sim_direc_pref_base.txt"
 
     while True:
-        for i in range(30):
-            pref_strght_A = random.randint(1,40)
-            pref_strght_B = random.randint(1,40)
-            times_played[pref_strght_A-1] +=1
-            times_played[pref_strght_B-1] +=1
+        won_points = [0 for _ in range(N)]  
+        times_played = [0 for _ in range(N)]  
 
-            simulation = Simulation(BaselineAnt, BaselineAnt,pref_strght=(pref_strght_A, pref_strght_B), logfile="project02.rec")   
+        for i in range(30):
+            pref_A = random.randint(1,N)
+            pref_B = random.randint(1,N)
+            times_played[pref_A-1] +=1
+            times_played[pref_B-1] +=1
+
+            simulation = Simulation(BaselineAnt, BaselineAnt,pref_direc=(pref_A, pref_B), logfile="project02.rec")   
         
             simulation.loadArena("arena01.txt")
 
@@ -29,11 +34,11 @@ if __name__ == "__main__":
             print(simulation.foodCount)
 
             if simulation.foodCount[0] > simulation.foodCount[1]:
-                won_points[pref_strght_A-1] += abs(simulation.foodCount[0] - simulation.foodCount[1])
-                won_points[pref_strght_B-1] -= abs(simulation.foodCount[0] - simulation.foodCount[1])
+                won_points[pref_A-1] += abs(simulation.foodCount[0] - simulation.foodCount[1])
+                won_points[pref_B-1] -= abs(simulation.foodCount[0] - simulation.foodCount[1])
             elif simulation.foodCount[1] > simulation.foodCount[0]:
-                won_points[pref_strght_A-1] -= abs(simulation.foodCount[0] - simulation.foodCount[1])
-                won_points[pref_strght_B-1] += abs(simulation.foodCount[0] - simulation.foodCount[1])
+                won_points[pref_A-1] -= abs(simulation.foodCount[0] - simulation.foodCount[1])
+                won_points[pref_B-1] += abs(simulation.foodCount[0] - simulation.foodCount[1])
             else:
                 pass
 
@@ -41,7 +46,7 @@ if __name__ == "__main__":
             print(i)
 
 
-        N = 40  # List length
+        
 
         # Step 1: Read existing lists (initialize if missing)
         if os.path.exists(filename):

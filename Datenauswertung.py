@@ -44,7 +44,7 @@ def ascii_histogram(probs, width=50):
     max_prob = np.max(probs)
     for idx, p in enumerate(probs):
         bar = '█' * int(p / max_prob * width)
-        print(f"{idx:2d}: {p:.6f} | {bar}")
+        print(f"{(idx+1):2d}: {p:.6f} | {bar}")
 
 def gleitender_mittelwert(daten, window_size=3):
     """
@@ -72,7 +72,7 @@ def gleitender_mittelwert(daten, window_size=3):
     return geglaettete_daten
  
 def main():
-    filename = 'sim_strght_pref.txt'  # Passe den Dateinamen ggf. an
+    filename = 'sim_direc_pref_base.txt'  # Passe den Dateinamen ggf. an
     data = load_data(filename)
     shifted = normalize_data(data)
     probs = probabilities(shifted)

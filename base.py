@@ -4,11 +4,13 @@ import random
 class BaselineAnt(Ant):
     def __init__(self, x, y, team, simulation):
         super().__init__(x, y, team, simulation)
-        self.pref_strght = 24
-        self.pref_direc = 4
-        self.pref_pher = 6
+        self.pref_strght_wtF = 24
+        self.pref_strght_wF = 11
+        self.pref_direc = 20
+        self.pref_pher = 15
 
-    def set_pref_strght(self, pref_strght): self.pref_strght = pref_strght
+    def set_pref_strght_wtF(self, pref_strght_wtF): self.pref_strght_wtF = pref_strght_wtF
+    def set_pref_strght_wF(self, pref_strght_wF): self.pref_strght_wF = pref_strght_wF
     def set_pref_direc(self, pref_direc): self.pref_direc = pref_direc
     def set_pref_pher(self, pref_pher): self.pref_pher = pref_pher
 
@@ -36,10 +38,11 @@ class BaselineAnt(Ant):
                     weights = [w + d for w,d in zip(weights, [0,0,1*self.pref_direc,0,1*self.pref_direc] if self.team == 0 else [0,1*self.pref_direc,0,1*self.pref_direc,0])]
                 # Pfade mit Pheromonen bevorzugen
                 if not all(x == 0 for x in pheremones) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)): 
-                    weights = [w + int(p*pref_pher*2) for w,p in zip(weights, pheremones)]
+                    weights = [w + int(p*self.pref_pher*2) for w,p in zip(weights, pheremones)]
                     weights[0] = 0
                 # Gerade aus bevorzugen
-                weights[self.directions.index(self.direction)] *= 24
+                weights[self.directions.index(self.direction)] *= self.pref_strght_wtF
+
                 # Gehen, solange bis man nicht mehr gegen eine Wand rennt
                 while self.energy >= 1:
                     self.direction = random.choices(self.directions, weights, k=1)[0]
@@ -57,10 +60,10 @@ class BaselineAnt(Ant):
                 weights = [w + d for w,d in zip(weights, [0,1*self.pref_direc,0,0,1*self.pref_direc] if self.team == 0 else [0,0,1*self.pref_direc,1*self.pref_direc,0])]
             # Pfade mit Pheromonen bevorzugen
             if not all(x == 0 for x in pheremones) and ((self.x > 5 or self.y > 5) if self.team == 0 else (self.x < 26 or self.y < 26)): 
-                weights = [w + int(p*pref_pher) for w,p in zip(weights, pheremones)]  
-                weights[0] = 0        
+                weights = [w + int(p*self.pref_pher) for w,p in zip(weights, pheremones)]  
+                weights[0] = 0 
             # Gerade aus bevorzugen
-            weights[self.directions.index(self.direction)] *= 5
+            weights[self.directions.index(self.direction)] *= self.pref_strght_wF
 
             # Gehen, solange bis man nicht mehr gegen eine Wand rennt
             while self.energy >= 1:
